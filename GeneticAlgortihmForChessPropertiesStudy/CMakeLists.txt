@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_executable (GeneticAlgortihmForChessPropertiesStudy "GeneticAlgortihmForChessPropertiesStudy.cpp" "GeneticAlgortihmForChessPropertiesStudy.h")
+add_executable (GeneticAlgortihmForChessPropertiesStudy   "main.cpp" "position.cpp" "position.h" "operations.cpp" "operations.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET GeneticAlgortihmForChessPropertiesStudy PROPERTY CXX_STANDARD 20)
