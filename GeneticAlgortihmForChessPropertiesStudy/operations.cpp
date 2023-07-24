@@ -43,19 +43,24 @@ bool biasedCoin(float p) {
 void selection(Position* currentGeneration, Position* nextGeneration) {
     nextGeneration;
     int xOverBoard, xOverPieces;
-    for (int i = 0; i < POPULATION_SIZE; i++) {
+    int counter = 0;
+    while (counter != POPULATION_SIZE) {
         xOverBoard = xOverIndex(BOARD_STRING_SIZE);
         xOverPieces = xOverIndex(PIECE_STRING_SIZE);
         Position pos1 = weightedRouletteWheelSelection(currentGeneration);
         Position pos2 = weightedRouletteWheelSelection(currentGeneration);
 
         if (biasedCoin(XOVER_PROBABILITY)) {
+            counter++;
             xOver(pos1, pos2, xOverBoard, xOverPieces, nextGeneration++);
         }
     }
-    // Re-Set currentGeneration
     for (int i = 0; i < POPULATION_SIZE; i++) {
-        currentGeneration[i] = nextGeneration[i];
+        nextGeneration--;
+    }
+
+    for (int j = 0; j < POPULATION_SIZE; j++) {
+        currentGeneration[j] = nextGeneration[j];
     }
 }
 
@@ -101,6 +106,7 @@ int xOverIndex(int type) {
     }
     return xOverIndex;
 }
+
 
 
 
