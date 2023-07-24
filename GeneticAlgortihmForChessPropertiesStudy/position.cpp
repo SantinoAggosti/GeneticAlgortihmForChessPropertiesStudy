@@ -1,16 +1,27 @@
 #include "position.h"
-#include <iostream>
-#include <random>
+
 
 void Position :: setPieces() {
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < PIECE_STRING_SIZE; i++) {
         piecesGene[i] = generateRandomBit();
     }
 }
 
 void Position::setBoard() {
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < BOARD_STRING_SIZE; i++) {
         boardGene[i] = generateRandomBit();
+    }
+}
+
+void Position::setBoard(array<bool, BOARD_STRING_SIZE> board) {
+    for (int i = 0; i < BOARD_STRING_SIZE; i++) {
+        boardGene[i] = board[i];
+    }
+}
+
+void Position::setPieces(array<bool, PIECE_STRING_SIZE> pieces) {
+    for (int i = 0; i < PIECE_STRING_SIZE; i++) {
+        piecesGene[i] = pieces[i];
     }
 }
 
@@ -39,3 +50,13 @@ void Position::printPiecesGene() {
     }
     cout << endl;
 }
+
+void Position::setFitness() {
+    fitness = 0;
+    for (int i = 0; i < BOARD_STRING_SIZE; i++) {
+        if (boardGene[i]) {
+
+        }
+    }
+}
+
