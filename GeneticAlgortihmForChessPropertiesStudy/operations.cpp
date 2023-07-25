@@ -40,7 +40,7 @@ bool biasedCoin(float p) {
     }
 }
 
-void selection(Position* currentGeneration, Position* nextGeneration) {
+void operations(Position* currentGeneration, Position* nextGeneration) {
     nextGeneration;
     int xOverBoard, xOverPieces;
     int counter = 0;
@@ -49,10 +49,15 @@ void selection(Position* currentGeneration, Position* nextGeneration) {
         xOverPieces = xOverIndex(PIECE_STRING_SIZE);
         Position pos1 = weightedRouletteWheelSelection(currentGeneration);
         Position pos2 = weightedRouletteWheelSelection(currentGeneration);
-
         if (biasedCoin(XOVER_PROBABILITY)) {
             counter++;
-            xOver(pos1, pos2, xOverBoard, xOverPieces, nextGeneration++);
+            xOver(pos1, pos2, xOverBoard, xOverPieces, nextGeneration);
+            mutation(*(nextGeneration++), BOARD_MUTATION, PIECE_MUTATION);
+        }
+        else {
+            counter++;
+            *(nextGeneration) = biasedCoin(0.5) ? pos2 : pos1;
+            mutation(*(nextGeneration++), BOARD_MUTATION, PIECE_MUTATION);
         }
     }
     for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -64,7 +69,7 @@ void selection(Position* currentGeneration, Position* nextGeneration) {
     }
 }
 
-// Function to perform weighted roulette wheel selection
+// Function to perform weighted roulette wheel operations
 Position weightedRouletteWheelSelection(Position* currentGeneration) {
     // Calculate the total fitness of all individuals
     double totalFitness = 0.0;
@@ -96,17 +101,39 @@ int xOverIndex(int type) {
     random_device rd;
     mt19937 gen(rd());
     uniform_real_distribution<> distrib(0.0, 1);
-    double randomValue = distrib(gen);
+    double randomValueBoard = distrib(gen);
+    double randomValuePiece = distrib(gen);
     int xOverIndex;
     if (type == BOARD_STRING_SIZE) {
-        xOverIndex = randomValue * BOARD_STRING_SIZE;
+        xOverIndex = randomValueBoard * BOARD_STRING_SIZE;
     }
     else {
-        xOverIndex = randomValue * PIECE_STRING_SIZE;
+        xOverIndex = randomValueBoard * PIECE_STRING_SIZE;
     }
     return xOverIndex;
 }
 
+void mutation(Position &pos, double pBoard, double pPiece) {
+    random_device rd;  // Seed for the random number generator
+    mt19937 gen(rd()); // Mersenne Twister random number engine
+    uniform_real_distribution<> dis(0.0, 1.0); // Uniform distribution [0, 1)
 
+    for (int i = 0; i < BOARD_STRING_SIZE; i++) {
+        // Generate a random number between 0 and 1
+        double randomProb = dis(gen);
 
+        // If the random number is less than the probability, mutate the bit
+        if (randomProb < pBoard) {
+            pos.boardGene[i] = !pos.boardGene[i]; // Mutate the bit (flip 0 to 1 or 1 to 0)
+        }
+    }
+    for (int j = 0; j < PIECE_STRING_SIZE; j++) {
+        // Generate a random number between 0 and 1
+        double randomProb = dis(gen);
 
+        // If the random number is less than the probability, mutate the bit
+        if (randomProb < pPiece) {
+            pos.piecesGene[j] = !pos.piecesGene[j]; // Mutate the bit (flip 0 to 1 or 1 to 0)
+        }
+    }
+}

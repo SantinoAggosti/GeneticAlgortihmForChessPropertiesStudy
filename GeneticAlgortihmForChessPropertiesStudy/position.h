@@ -10,7 +10,7 @@
 bool generateRandomBit();
 
 using namespace std;
-#define POPULATION_SIZE 250
+#define POPULATION_SIZE 2000
 #define PIECE_SIZE 4
 #define N 8
 #define M 8
@@ -26,8 +26,8 @@ public:
 	Position() {
 		setBoard();
 		setPieces();
-		setFitness();
 		setFED();
+		setFitness();
 	}
 	// Operational Constructor
 	Position(array<bool, BOARD_STRING_SIZE> boardGene, array<bool, PIECE_STRING_SIZE> pieceGene) {
@@ -51,7 +51,8 @@ public:
 		{"0110", "k"},
 
 	};
-	int fitness;
+	float fitness;
+	int numberOfMoves;
 	string FEDstringCode;
 	array<bool, BOARD_STRING_SIZE> boardGene;
 	array<bool, PIECE_STRING_SIZE> piecesGene;
@@ -60,7 +61,7 @@ public:
 	void printFED();
 	void setFitness();
 	void setFED();
-
+	void setNumberOfMoves(int size);
 private:
 	void setBoard();
 	void setPieces();
