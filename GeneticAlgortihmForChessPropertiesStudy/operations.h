@@ -8,6 +8,7 @@
 
 void operations(Position* currentGen, Position* nextGen);
 void xOver(Position& pos1, Position& pos2, int xOverBoard, int xOverPieces, Position* new_generation);
+void PMX(Position& pos1, Position& pos2, int xOverIndex1, int xOverIndex2, bool isBoard);
 Position weightedRouletteWheelSelection(Position* currentGeneration);
 bool biasedCoin(float probability);
 int xOverIndex(int type);

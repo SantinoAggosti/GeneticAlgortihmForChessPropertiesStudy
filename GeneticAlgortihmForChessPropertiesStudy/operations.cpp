@@ -1,5 +1,34 @@
 #include "operations.h"
 
+void PMX(Position& pos1, Position& pos2, int xOverIndex1, int xOverIndex2, bool isBoard, Position* nextGeneration) {
+    // Largest size
+    int const arraySize = PIECE_STRING_SIZE;
+    array<bool, arraySize> boardArr1{};
+    array<bool, arraySize> boardArr2{};
+    if (isBoard) {
+        for (int i = xOverIndex1; i < xOverIndex2; i++) {
+            boardArr1[i] = pos2.boardGene[i];
+            boardArr2[i] = pos1.boardGene[i];
+        }
+        for (int i = xOverIndex1; i < xOverIndex2; i++) {
+            pos1.boardGene[i] = boardArr1[i];
+            pos2.boardGene[i] = boardArr2[i];
+        }
+    }
+    else {
+        for (int i = xOverIndex1; i < xOverIndex2; i++) {
+            boardArr1[i] = pos2.piecesGene[i];
+            boardArr2[i] = pos1.piecesGene[i];
+        }
+        for (int i = xOverIndex1; i < xOverIndex2; i++) {
+            pos1.piecesGene[i] = boardArr1[i];
+            pos2.piecesGene[i] = boardArr2[i];
+        }
+    }
+
+}
+
+// CrossOver Function: Genetic Diversification is generated through Crossover operation.
 void xOver(Position& pos1, Position& pos2, int xOverBoard, int xOverPieces, Position* new_generation) {
 
     array<bool, BOARD_STRING_SIZE> newBoardGene{};
@@ -40,18 +69,26 @@ bool biasedCoin(float p) {
     }
 }
 
+
+// Operations: The whole set of operations is executed in the correct order through the overall population.
 void operations(Position* currentGeneration, Position* nextGeneration) {
     nextGeneration;
-    int xOverBoard, xOverPieces;
+    int xOverBoard1, xOverBoard2, xOverPieces1, xOverPieces2;
     int counter = 0;
     while (counter != POPULATION_SIZE) {
-        xOverBoard = xOverIndex(BOARD_STRING_SIZE);
-        xOverPieces = xOverIndex(PIECE_STRING_SIZE);
+        xOverBoard1 = xOverIndex(BOARD_STRING_SIZE);
+        xOverBoard2 = xOverIndex(BOARD_STRING_SIZE);
+
+        xOverPieces1 = xOverIndex(PIECE_STRING_SIZE);
+        xOverPieces2 = xOverIndex(PIECE_STRING_SIZE);
+
         Position pos1 = weightedRouletteWheelSelection(currentGeneration);
         Position pos2 = weightedRouletteWheelSelection(currentGeneration);
         if (biasedCoin(XOVER_PROBABILITY)) {
             counter++;
-            xOver(pos1, pos2, xOverBoard, xOverPieces, nextGeneration);
+            xOver(pos1, pos2, xOverBoard1, xOverPieces1, nextGeneration);
+            //PMX(pos1, pos2, nextGeneration);
+
             mutation(*(nextGeneration++), BOARD_MUTATION, PIECE_MUTATION);
         }
         else {
@@ -69,7 +106,7 @@ void operations(Position* currentGeneration, Position* nextGeneration) {
     }
 }
 
-// Function to perform weighted roulette wheel operations
+// Wighted Roullete: Function to perform weighted roulette wheel operations
 Position weightedRouletteWheelSelection(Position* currentGeneration) {
     // Calculate the total fitness of all individuals
     double totalFitness = 0.0;
@@ -96,6 +133,7 @@ Position weightedRouletteWheelSelection(Position* currentGeneration) {
     return currentGeneration[POPULATION_SIZE - 1];
 }
 
+// XOverIndex: Index Cross Over Selection
 int xOverIndex(int type) {
     // Size of gene indiccates type of xOverIndex I am going to be using
     random_device rd;
@@ -113,6 +151,7 @@ int xOverIndex(int type) {
     return xOverIndex;
 }
 
+// Mutation: Additional genetic diversification and generation of unexplores genetic code is produced through Mutation of single alleles in genes.
 void mutation(Position &pos, double pBoard, double pPiece) {
     random_device rd;  // Seed for the random number generator
     mt19937 gen(rd()); // Mersenne Twister random number engine

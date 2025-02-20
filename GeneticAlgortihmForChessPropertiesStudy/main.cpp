@@ -12,12 +12,40 @@ GenerationData getMaximumFitness();
 void getMaximumFitness(GenerationData &data);
 void getMaximumMoves(GenerationData& data);
 
+// Generations are devided into a simple array.
+// I want to subdivide that array previous to each iteration and create species based on the caracteristics their boards and pieces
+// genes have in common
 
+#define TSHOLD 32
 
-#define NUMBER_OF_GENERATIONS 3000
+#define NUMBER_OF_GENERATIONS 500
 
 Position* next_generation = new Position[POPULATION_SIZE];
 Position* current_generation = new Position[POPULATION_SIZE];
+
+// Returns if two individuals can be of the same species
+bool Compatibility(Position pos1, Position pos2) {
+	float compatibility = 0;
+	for (int i = 0; i < PIECE_STRING_SIZE; i++) {
+		if (pos1.piecesGene[i] == pos2.piecesGene[i]) {
+			compatibility += 1;
+		}
+	}
+	for (int i = 0; i < BOARD_STRING_SIZE; i++) {
+		if (pos1.boardGene[i] == pos2.boardGene[i]) {
+			compatibility += 1;
+		}
+	}
+	if (compatibility > TSHOLD) {
+		return true;
+	}
+}
+
+void SpeciesGeneration(Position* current_generation) {
+	for (int i = 0; i < POPULATION_SIZE; i++) {
+		Position pos = current_generation[i];
+	}
+}
 
 int main() {
 	int maxMoves = 0;

@@ -7,15 +7,21 @@
 #include <random>
 #include <unordered_map>
 
+// Positions: Binary Coded organisms consisting of a gene to represent the pieces and positioning of such pieces.
+// Each piece is encoded through 4 digits, as shown in FEDstrings. With a max quantity of pieces (32), the total encodign pieces length is 128 chars.
+// The position is encoded through a binary matrix in string form (100101110....) of 64 characters, representing the allowed positioning of the pieces.
+// Population Size indicated the amount of "Positions" organisms in the population at any given time.
+
 bool generateRandomBit();
 
 using namespace std;
-#define POPULATION_SIZE 2000
+#define POPULATION_SIZE 4000
 #define PIECE_SIZE 4
 #define N 8
 #define M 8
 #define BOARD_STRING_SIZE N*M
-#define PIECE_STRING_SIZE 128
+#define MAX_PIECES 32
+#define PIECE_STRING_SIZE MAX_PIECES*PIECE_SIZE
 
 
 //unordered_map<string, string> FEDstrings;
@@ -52,6 +58,7 @@ public:
 
 	};
 	float fitness;
+	int especie;
 	int numberOfMoves;
 	string FEDstringCode;
 	array<bool, BOARD_STRING_SIZE> boardGene;
@@ -68,7 +75,6 @@ private:
 
 	void setBoard(array<bool, BOARD_STRING_SIZE>);
 	void setPieces(array<bool, PIECE_STRING_SIZE>);
-	
 	//void CrossOver();
 };
 

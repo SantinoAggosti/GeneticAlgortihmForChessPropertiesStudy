@@ -79,30 +79,33 @@ void Position::setFitness() {
 		}
 	}
 
-	if (blackKingCount != 1 || whiteKingCount != 1) {
-		adders -= 75;
-	}
-	if (whiteQueenCount > 9) {
-		adders -= whiteQueenCount * 5;
-	}
-	if (whiteRookCount > 10) {
-		adders -= 5;
-	}
-	if (whiteBishopCount + whiteQueenCount + whitePawnCount + whiteRookCount + whiteKingCount > 15) {
+	if (blackKingCount != 1) {
 		adders -= 20;
 	}
-	if (whiteQueenCount + whiteRookCount > 11) {
+	if (whiteKingCount != 1) {
 		adders -= 10;
+	}
+	if (whiteQueenCount > 9) {
+		adders -= 16;
+	}
+	if (whiteRookCount > 10) {
+		adders -= 15;
+	}
+	if (whiteBishopCount + whiteQueenCount + whitePawnCount + whiteRookCount + whiteKingCount > 15) {
+		adders -= 15;
+	}
+	if (whiteQueenCount + whiteRookCount > 11) {
+		adders -= 15;
 	}
 
 	// Black King in Check
 	if (blackKingCount == 1) {
 		if (position.AttackedPiece(position.bking_square)) {
-			adders -= 50;
+			adders -= 15;
 		}
 	}
 
-	fitness = moveList.size() * 1.7 + adders;
+	fitness = moveList.size()*1.05 + adders;
 	fitness < 0 ? fitness = 0 : fitness;
 	setNumberOfMoves(moveList.size());
 }
@@ -184,5 +187,5 @@ void Position::setFED() {
 		FEDstringCode.append(to_string(emptySpaces));
 	}
 	// Structure for library used;
-	FEDstringCode.append(" w KQkq - 0 1");
+	FEDstringCode.append(" w - - 0 1");
 }
