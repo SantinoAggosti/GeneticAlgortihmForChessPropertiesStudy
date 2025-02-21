@@ -10,3 +10,9 @@ The board gene is a 64 binary string that encodes the matrix configuration of th
 The Position Gene is a 4*32 binary string that encodes all possible 32 pieces in the game. Each piece is represented by a 4-binary encoding in the following way:
 
 TODO: ADD ENCODING FROM CODE
+
+The main loop of the algorithm consists in three main steps: Selection, CrossOver and Mutation.
+
+#**SELECTION:**
+The selection procedure consists in finding the most suitable "Chess Board Organisms" to reproduce. That is, to pass on part of their genetic encoding to the next generation. A pool of _**FIT**_ individuals are selected based on their _FITNESS_- This fitness is arbitrary, but for this project, the goal is to **MAXIMIZE THE TOTAL NUMBER OF POSSIBLE MOVES WHITE CAN DO IN A NON-CHECK, POSSIBLE TO REACH IN GAME CHESS POSITION**. Therefore, the fitness function that evaluates the strength of each individual nnecesarilly needs to be directly proportional to the amount of legal moves white can do in such position. 
+For this project, a linear fitness function proved to work best: F(moves) = a*moves + b. Where "b" is a given Punishment variable used to maintain within the chess rules the number and type of pieces within the chess board. (EXPLAIN ADVANTAGES AND DISADVANTAGES OF THIS)
