@@ -29,6 +29,10 @@ Mutation, allows ffor new and key genetic information, possibly unexplored befor
 The algorithm still produces overall best-fit impossible and king-in-check positions which in this case are undisirable. The problem is centralize on the encoding chosen. 
 The encoding should somehow strictlly limit the chess-board vector-space on to the ones that are possible. If it is assumed that the global maxima of legal moves by white, wuth no king in check, is maximized if and only if 9 white queens are used, the genetic encoding of the chess-board encoding could be simplified into a dual-gene encoding, maintaining the "Board" gene, and a "Position" gene, which implicitlly encodes in which position each piece should be placed when reading the board gene in order for example. However, through the implementation of this project, no assumptions where made about the main characteristics a sub-optimal or global maxima in legal moves chess-board should have; Therefore the presence of undisirable positions was allowed, given that additionally, this could provide insightful and totally usuful genetic allele sequences for fitness improvement through crossover, that could otherwise be ignored with a piece-strict encoding like mentioned before.
 
+### SPECIATION
+
+Subdividing reproduction within individuals by speciation coul provide with highlly improved performance. Empirically, results obtained with 750-1250 individuals, generally converge in the same manner as populations of 4000 individuals in the long run: A .....
+
 ## EMPIRIC ANALYSIS ON FITNESS FUNCTION
 The fitness function chosen was of the form: F(moves) = a*moves + b.
 
