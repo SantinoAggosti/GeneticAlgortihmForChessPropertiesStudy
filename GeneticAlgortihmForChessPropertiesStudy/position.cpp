@@ -107,7 +107,7 @@ void Position::setFitness() {
 		}
 	}
 
-	fitness = moveList.size()*1.05 + adders;
+	fitness = moveList.size() * 1.05 + adders;
 	fitness < 0 ? fitness = 0 : fitness;
 	setNumberOfMoves(moveList.size());
 }
@@ -150,6 +150,7 @@ void Position::printFED() {
 void Position::setFED() {
 	int numberOfPieces = -1;
 	int emptySpaces = 0;
+	int rank = 1;
 	FEDstringCode = "";
 	for (int i = 0; i < BOARD_STRING_SIZE; i++) {
 		if (i != 0 && ((i % N1) == 0)) {
@@ -158,6 +159,7 @@ void Position::setFED() {
 				emptySpaces = 0;
 			}
 			FEDstringCode.append("/");
+			rank++;
 		}
 		string piece = "";
 		if (boardGene[i] && numberOfPieces != 31) {
@@ -166,6 +168,9 @@ void Position::setFED() {
 			// Translate coding to string
 			for (int j = 0; j < PIECE_SIZE; j++) {
 				piece.append(to_string(piecesGene[numberOfPieces * 4 + j]));
+			}
+			if (piece == "0110") {
+				setSpecies(rank);
 			}
 
 			// If the coding does exist
@@ -191,3 +196,39 @@ void Position::setFED() {
 	// Structure for library used;
 	FEDstringCode.append(" w - - 0 1");
 }
+
+void Position::setSpecies(int& rank) {
+	switch (rank) {
+	case 1:
+		species = FIRSTQ;
+		break;
+	case 2:
+		species = FIRSTQ;
+		break;
+	case 3:
+		species = SECONDQ;
+		break;
+	case 4:
+		species = SECONDQ;
+		break;
+	case 5:
+		species = THIRDQ;
+		break;
+	case 6:
+		species = THIRDQ;
+		break;
+	case 7:
+		species = FOURTHQ;
+		break;
+	case 8:
+		species = FOURTHQ;
+		break;
+	default:
+		species = NOBLACKKING;
+		break;
+	}
+}
+void Position::setSpecies() {
+	species = SECONDQ;
+}
+

@@ -13,6 +13,7 @@ struct GenerationData {
 	int maxNumberMoves = 0;
 	double mean = 0.0;
 	double std_dev = 0.0;
+	int species = FIRSTQ;
 };
 
 std::pair<GenerationData, GenerationData> operations(Position* currentGen, Position* nextGen);

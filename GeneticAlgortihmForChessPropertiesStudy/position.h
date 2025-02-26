@@ -7,6 +7,14 @@
 #include <random>
 #include <unordered_map>
 
+enum Species {
+	FIRSTQ,
+	SECONDQ,
+	THIRDQ,
+	FOURTHQ,
+	NOBLACKKING
+};
+// Usage: Colors myColor = RED;
 
 // Positions: Binary Coded organisms consisting of a gene to represent the pieces and positioning of such pieces.
 // Each piece is encoded through 4 digits, as shown in FEDstrings. With a max quantity of pieces (32), the total encodign pieces length is 128 chars.
@@ -15,7 +23,7 @@
 
 bool generateRandomBit();
 
-#define POPULATION_SIZE 2000
+#define POPULATION_SIZE 4000
 #define PIECE_SIZE 4
 #define N1 8
 #define M1 8
@@ -29,6 +37,7 @@ public:
 	Position() {
 		setBoard();
 		setPieces();
+		setSpecies();
 		setFED();
 		setFitness();
 	}
@@ -36,8 +45,10 @@ public:
 	Position(std::array<bool, BOARD_STRING_SIZE> boardGene, std::array<bool, PIECE_STRING_SIZE> pieceGene) {
 		setBoard(boardGene);
 		setPieces(pieceGene);
+		setSpecies();
 		setFitness();
 		setFED();
+
 	}
 	std::unordered_map<std::string, std::string> FEDstrings = {
 		{"1001", "P"},
@@ -55,7 +66,7 @@ public:
 
 	};
 	float fitness;
-	int especie;
+	int species;
 	int numberOfMoves;
 	std::string FEDstringCode;
 	std::array<bool, BOARD_STRING_SIZE> boardGene;
@@ -65,6 +76,8 @@ public:
 	void printFED();
 	void setFitness();
 	void setFED();
+	void setSpecies(int& rank);
+	void setSpecies();
 	void setNumberOfMoves(int size);
 private:
 	void setBoard();

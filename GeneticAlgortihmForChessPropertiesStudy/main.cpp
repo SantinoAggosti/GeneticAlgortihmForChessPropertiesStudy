@@ -51,11 +51,10 @@ int main() {
 		std::cout << " -------------------------------------------------------------------------------------------------------------\n" << std::endl;
 
 		std::cout << "Generation N: " << i + 1 << "\n" << std::endl;
-
+		std::cout << "Fitness " << ": " << result.first.maximumFitness << std::endl;
 		std::cout << "Number of Moves: " << result.first.maxNumberMoves << "\n" << std::endl;
-
 		std::cout << " CODE: " << result.first.code << ";" << std::endl;
-		std::cout << "Maximum Fitness " << ": " << result.first.maximumFitness << std::endl;
+		std::cout << "Species: " << result.first.species << std::endl;
 		//std::cout << "Generation Fitness Mean: " << auxFitnessStatistics[0] << std::endl;
 		//std::cout << "Generation Fitness StdDev: " << auxFitnessStatistics[1] << "\n" << std::endl;
 
