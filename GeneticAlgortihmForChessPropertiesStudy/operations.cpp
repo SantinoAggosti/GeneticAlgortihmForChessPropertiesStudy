@@ -1,5 +1,5 @@
 #include "operations.h"
-
+using namespace std;
 void PMX(Position& pos1, Position& pos2, int xOverIndex1, int xOverIndex2, bool isBoard, Position* nextGeneration) {
     // Largest size
     int const arraySize = PIECE_STRING_SIZE;
@@ -29,7 +29,7 @@ void PMX(Position& pos1, Position& pos2, int xOverIndex1, int xOverIndex2, bool 
 }
 
 // CrossOver Function: Genetic Diversification is generated through Crossover operation.
-void xOver(Position& pos1, Position& pos2, int xOverBoard, int xOverPieces, Position* new_generation) {
+void xOver(Position& pos1, Position& pos2, int xOverBoard, int xOverPieces, Position& newIndividual) {
 
     array<bool, BOARD_STRING_SIZE> newBoardGene{};
     array<bool, PIECE_STRING_SIZE> newPieceGene{};
@@ -51,7 +51,7 @@ void xOver(Position& pos1, Position& pos2, int xOverBoard, int xOverPieces, Posi
     }
 
     Position newPosition(newBoardGene, newPieceGene);
-    *new_generation = newPosition;
+    newIndividual = newPosition;
 }
 
 bool biasedCoin(float p) {
@@ -69,47 +69,68 @@ bool biasedCoin(float p) {
     }
 }
 
+// Information holder for fittest individual overall.
+GenerationData fittestOverall = {"", 0, 0};
+
+// Information holder for fittest individual within a genertion
+GenerationData generationFittest = {"", 0, 0};
 
 // Operations: The whole set of operations is executed in the correct order through the overall population.
-void operations(Position* currentGeneration, Position* nextGeneration) {
-    nextGeneration;
+std::pair<GenerationData, GenerationData> operations(Position* currentGeneration, Position* nextGeneration) {
     int xOverBoard1, xOverBoard2, xOverPieces1, xOverPieces2;
-    int counter = 0;
-    while (counter != POPULATION_SIZE) {
+    generationFittest = { "", 0, 0 };
+    for (int i = 0; i < POPULATION_SIZE; i++) {
         xOverBoard1 = xOverIndex(BOARD_STRING_SIZE);
         xOverBoard2 = xOverIndex(BOARD_STRING_SIZE);
 
         xOverPieces1 = xOverIndex(PIECE_STRING_SIZE);
         xOverPieces2 = xOverIndex(PIECE_STRING_SIZE);
 
+        // Probabilistic fitness scaled selection. (Iteration through current Generation)
         Position pos1 = weightedRouletteWheelSelection(currentGeneration);
         Position pos2 = weightedRouletteWheelSelection(currentGeneration);
+
         if (biasedCoin(XOVER_PROBABILITY)) {
-            counter++;
-            xOver(pos1, pos2, xOverBoard1, xOverPieces1, nextGeneration);
+            xOver(pos1, pos2, xOverBoard1, xOverPieces1, nextGeneration[i]);
             //PMX(pos1, pos2, nextGeneration);
 
-            mutation(*(nextGeneration++), BOARD_MUTATION, PIECE_MUTATION);
+            mutation(nextGeneration[i], BOARD_MUTATION, PIECE_MUTATION);
+            nextGeneration[i].setFED();
+            nextGeneration[i].setFitness();
+            //currentGeneration[i] = nextGeneration[i];
         }
         else {
-            counter++;
-            *(nextGeneration) = biasedCoin(0.5) ? pos2 : pos1;
-            mutation(*(nextGeneration++), BOARD_MUTATION, PIECE_MUTATION);
+            nextGeneration[i] = biasedCoin(0.5) ? pos2 : pos1;
+            mutation(nextGeneration[i], BOARD_MUTATION, PIECE_MUTATION);
+            nextGeneration[i].setFED();
+            nextGeneration[i].setFitness();
+            //currentGeneration[i] = nextGeneration[i];
+
         }
-    }
-    for (int i = 0; i < POPULATION_SIZE; i++) {
-        nextGeneration--;
+        generationAndOverallFittest(generationFittest, fittestOverall, nextGeneration[i]);
+
     }
 
-    for (int j = 0; j < POPULATION_SIZE; j++) {
-        currentGeneration[j] = nextGeneration[j];
+    // The pointer initially being used to allocate the current generation now points
+    // To the now updated next generation.
+    //
+    // The pointer that previouslly pointed to the to-fullfill generation now points to the previous population.
+    // This dynamic memory that allocated the previous population, will now be edited through the OPERATIONS function.
+
+    // This saves the iteration through the entire Population to individually assign one generation to the other.
+    //std::swap(currentGeneration, nextGeneration);
+
+    for (int i = 0; i < POPULATION_SIZE; i++) {
+        currentGeneration[i] = nextGeneration[i];
     }
+
+    return { generationFittest, fittestOverall };
 }
 
 // Wighted Roullete: Function to perform weighted roulette wheel operations
 Position weightedRouletteWheelSelection(Position* currentGeneration) {
     // Calculate the total fitness of all individuals
-    double totalFitness = 0.0;
+    double totalFitness = 0;
     for (int i = 0; i < POPULATION_SIZE; i++) {
         totalFitness += currentGeneration[i].fitness;
     }
@@ -138,7 +159,7 @@ int xOverIndex(int type) {
     // Size of gene indiccates type of xOverIndex I am going to be using
     random_device rd;
     mt19937 gen(rd());
-    uniform_real_distribution<> distrib(0.0, 1);
+    uniform_real_distribution<> distrib(0.0, 1.0);
     double randomValueBoard = distrib(gen);
     double randomValuePiece = distrib(gen);
     int xOverIndex;
@@ -174,5 +195,23 @@ void mutation(Position &pos, double pBoard, double pPiece) {
         if (randomProb < pPiece) {
             pos.piecesGene[j] = !pos.piecesGene[j]; // Mutate the bit (flip 0 to 1 or 1 to 0)
         }
+    }
+}
+
+// Optimization is still required.
+void generationAndOverallFittest(GenerationData& generationFittest, GenerationData& fittestOverall, Position &individual2Analyze) {
+    if (individual2Analyze.fitness > fittestOverall.maximumFitness) {
+        fittestOverall.maximumFitness = individual2Analyze.fitness;
+        fittestOverall.code = individual2Analyze.FEDstringCode;
+        fittestOverall.maxNumberMoves = individual2Analyze.numberOfMoves;
+        generationFittest.maximumFitness = individual2Analyze.fitness;
+        generationFittest.code = individual2Analyze.FEDstringCode;
+        generationFittest.maxNumberMoves = individual2Analyze.numberOfMoves;
+    }
+
+    else if (individual2Analyze.fitness > generationFittest.maximumFitness) {
+        generationFittest.maximumFitness = individual2Analyze.fitness;
+        generationFittest.code = individual2Analyze.FEDstringCode;
+        generationFittest.maxNumberMoves = individual2Analyze.numberOfMoves;
     }
 }

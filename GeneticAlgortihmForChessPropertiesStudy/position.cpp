@@ -3,8 +3,7 @@
 #include "thc.h"
 #include <cmath>
 
-
-using namespace thc;
+using namespace std;
 
 
 void Position::setPieces() {
@@ -35,11 +34,11 @@ void Position::setPieces(array<bool, PIECE_STRING_SIZE> pieces) {
 
 void Position::setFitness() {
 
-	ChessRules position;
+	thc::ChessRules position;
 	const char* str = &FEDstringCode[0];
 	position.Forsyth(str);
-	vector<Move> moveList;
-	vector<Move> checks;
+	vector<thc::Move> moveList;
+	vector<thc::Move> checks;
 	position.GenLegalMoveList(moveList);
 
 	int adders = 0;
@@ -80,13 +79,13 @@ void Position::setFitness() {
 	}
 
 	if (blackKingCount != 1) {
-		adders -= 20;
+		adders -= 40;
 	}
 	if (whiteKingCount != 1) {
 		adders -= 10;
 	}
 	if (whiteQueenCount > 9) {
-		adders -= 16;
+		adders -= 20;
 	}
 	if (whiteRookCount > 10) {
 		adders -= 15;
@@ -97,11 +96,14 @@ void Position::setFitness() {
 	if (whiteQueenCount + whiteRookCount > 11) {
 		adders -= 15;
 	}
+	if (whiteQueenCount + whiteBishopCount > 11) {
+		adders -= 15;
+	}
 
 	// Black King in Check
 	if (blackKingCount == 1) {
 		if (position.AttackedPiece(position.bking_square)) {
-			adders -= 15;
+			adders -= 30;
 		}
 	}
 
@@ -150,7 +152,7 @@ void Position::setFED() {
 	int emptySpaces = 0;
 	FEDstringCode = "";
 	for (int i = 0; i < BOARD_STRING_SIZE; i++) {
-		if (i != 0 && ((i % N) == 0)) {
+		if (i != 0 && ((i % N1) == 0)) {
 			if (emptySpaces != 0) {
 				FEDstringCode.append(to_string(emptySpaces));
 				emptySpaces = 0;

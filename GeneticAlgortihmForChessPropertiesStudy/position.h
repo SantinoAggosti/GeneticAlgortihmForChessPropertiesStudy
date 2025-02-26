@@ -7,6 +7,7 @@
 #include <random>
 #include <unordered_map>
 
+
 // Positions: Binary Coded organisms consisting of a gene to represent the pieces and positioning of such pieces.
 // Each piece is encoded through 4 digits, as shown in FEDstrings. With a max quantity of pieces (32), the total encodign pieces length is 128 chars.
 // The position is encoded through a binary matrix in string form (100101110....) of 64 characters, representing the allowed positioning of the pieces.
@@ -14,17 +15,13 @@
 
 bool generateRandomBit();
 
-using namespace std;
-#define POPULATION_SIZE 4000
+#define POPULATION_SIZE 2000
 #define PIECE_SIZE 4
-#define N 8
-#define M 8
-#define BOARD_STRING_SIZE N*M
+#define N1 8
+#define M1 8
+#define BOARD_STRING_SIZE N1*M1
 #define MAX_PIECES 32
 #define PIECE_STRING_SIZE MAX_PIECES*PIECE_SIZE
-
-
-//unordered_map<string, string> FEDstrings;
 
 class Position {
 public:
@@ -36,13 +33,13 @@ public:
 		setFitness();
 	}
 	// Operational Constructor
-	Position(array<bool, BOARD_STRING_SIZE> boardGene, array<bool, PIECE_STRING_SIZE> pieceGene) {
+	Position(std::array<bool, BOARD_STRING_SIZE> boardGene, std::array<bool, PIECE_STRING_SIZE> pieceGene) {
 		setBoard(boardGene);
 		setPieces(pieceGene);
 		setFitness();
 		setFED();
 	}
-	unordered_map<string, string> FEDstrings = {
+	std::unordered_map<std::string, std::string> FEDstrings = {
 		{"1001", "P"},
 		{"1010", "N"},
 		{"1011", "B"},
@@ -60,9 +57,9 @@ public:
 	float fitness;
 	int especie;
 	int numberOfMoves;
-	string FEDstringCode;
-	array<bool, BOARD_STRING_SIZE> boardGene;
-	array<bool, PIECE_STRING_SIZE> piecesGene;
+	std::string FEDstringCode;
+	std::array<bool, BOARD_STRING_SIZE> boardGene;
+	std::array<bool, PIECE_STRING_SIZE> piecesGene;
 	void printBoardGene();
 	void printPiecesGene();
 	void printFED();
@@ -73,9 +70,8 @@ private:
 	void setBoard();
 	void setPieces();
 
-	void setBoard(array<bool, BOARD_STRING_SIZE>);
-	void setPieces(array<bool, PIECE_STRING_SIZE>);
-	//void CrossOver();
+	void setBoard(std::array<bool, BOARD_STRING_SIZE>);
+	void setPieces(std::array<bool, PIECE_STRING_SIZE>);
 };
 
 #endif
