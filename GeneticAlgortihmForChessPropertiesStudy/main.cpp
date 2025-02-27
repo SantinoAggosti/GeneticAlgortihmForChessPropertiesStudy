@@ -19,6 +19,7 @@
 #define TSHOLD 32
 
 #define NUMBER_OF_GENERATIONS 300
+#define N_SPECIES 4
 
 Position* next_generation = new Position[POPULATION_SIZE];
 Position* current_generation = new Position[POPULATION_SIZE];
@@ -55,6 +56,15 @@ int main() {
 		std::cout << "Number of Moves: " << result.first.maxNumberMoves << "\n" << std::endl;
 		std::cout << " CODE: " << result.first.code << ";" << std::endl;
 		std::cout << "Species: " << result.first.species << std::endl;
+
+		//if (speciesOn) {
+		//	std::cout << "Species Distribution - 1: " << result.first.speciesDist[0] << std::endl;
+		//	std::cout << "Species Distribution - 2: " << result.first.speciesDist[1] << std::endl;
+		//	std::cout << "Species Distribution - 3: " << result.first.speciesDist[2] << std::endl;
+		//	std::cout << "Species Distribution - 4: " << result.first.speciesDist[3] << std::endl;
+		//}
+
+
 		//std::cout << "Generation Fitness Mean: " << auxFitnessStatistics[0] << std::endl;
 		//std::cout << "Generation Fitness StdDev: " << auxFitnessStatistics[1] << "\n" << std::endl;
 

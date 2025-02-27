@@ -82,7 +82,32 @@ GenerationData generationFittest = { "", 0, 0 };
 std::pair<GenerationData, GenerationData> operations(Position* currentGeneration, Position* nextGeneration) {
 	int xOverBoard1, xOverBoard2, xOverPieces1, xOverPieces2;
 	generationFittest = { "", 0, 0, FIRSTQ };
+	vector<double> speciesDistribution = { 0, 0, 0, 0, 0 };
 	for (int i = 0; i < POPULATION_SIZE; i++) {
+
+		switch (currentGeneration[i].species) {
+		case FIRSTQ:
+			speciesDistribution[0] += 1;
+
+			break;
+		case SECONDQ:
+			speciesDistribution[1] += 1;
+
+			break;
+		case THIRDQ:
+			speciesDistribution[2] += 1;
+
+			break;
+		case FOURTHQ:
+			speciesDistribution[3] += 1;
+
+			break;
+		case NOBLACKKING:
+			speciesDistribution[4] += 1;
+
+			break;
+		}
+		generationFittest.speciesDist = speciesDistribution;
 		xOverBoard1 = xOverIndex(BOARD_STRING_SIZE);
 		xOverBoard2 = xOverIndex(BOARD_STRING_SIZE);
 
@@ -93,10 +118,12 @@ std::pair<GenerationData, GenerationData> operations(Position* currentGeneration
 		Position pos1 = weightedRouletteWheelSelection(currentGeneration);
 		Position pos2 = weightedRouletteWheelSelection(currentGeneration);
 
+
 		// Speciation is applied for reproduction!
-		while (pos1.species != pos2.species) {
+		/*while (pos1.species != pos2.species) {
 			pos1 = weightedRouletteWheelSelection(currentGeneration);
-		}
+		}*/
+
 
 		if (biasedCoin(XOVER_PROBABILITY)) {
 			xOver(pos1, pos2, xOverBoard1, xOverPieces1, nextGeneration[i]);
@@ -139,20 +166,63 @@ std::pair<GenerationData, GenerationData> operations(Position* currentGeneration
 // Wighted Roullete: Function to perform weighted roulette wheel operations
 Position weightedRouletteWheelSelection(Position* currentGeneration) {
 	// Calculate the total fitness of all individuals
-	double totalFitness = 0;
+	vector<double> totalFitness = { 0, 0, 0, 0, 0 };
+	double fitnessSum = 0;
 	for (int i = 0; i < POPULATION_SIZE; i++) {
-		totalFitness += currentGeneration[i].fitness;
+		switch (currentGeneration[i].species) {
+		case FIRSTQ:
+			totalFitness[0] += currentGeneration[i].fitness;
+			break;
+		case SECONDQ:
+			totalFitness[1] += currentGeneration[i].fitness;
+			break;
+		case THIRDQ:
+			totalFitness[2] += currentGeneration[i].fitness;
+			break;
+		case FOURTHQ:
+			totalFitness[3] += currentGeneration[i].fitness;
+			break;
+		case NOBLACKKING:
+			totalFitness[4] += currentGeneration[i].fitness;
+			break;
+		}
 	}
-
+	for (int i = 0; i < 5; i++) {
+		fitnessSum += totalFitness[i];
+	}
+	vector<double> normalizationFactors = { 0, 0, 0, 0, 0 };
+	for (int i = 0; i < 5; i++) {
+		normalizationFactors[i] = fitnessSum / (5 * totalFitness[i]);
+	}
 	// Generate a random value within the range of the total fitness
 	random_device rd;
 	mt19937 gen(rd());
-	uniform_real_distribution<> distrib(0.0, totalFitness);
+	uniform_real_distribution<> distrib(0.0, fitnessSum);
 	double randomValue = distrib(gen);
 
 	// Spin the roulette wheel to select an individual
 	double partialSum = 0.0;
 	for (int i = 0; i < POPULATION_SIZE; i++) {
+
+		// Fitness normalization: Each species now has 25% chance of being choseen for reproduction.
+		switch (currentGeneration[i].species) {
+		case FIRSTQ:
+			currentGeneration[i].fitness *= normalizationFactors[0];
+			break;
+		case SECONDQ:
+			currentGeneration[i].fitness *= normalizationFactors[1];
+			break;
+		case THIRDQ:
+			currentGeneration[i].fitness *= normalizationFactors[2];
+			break;
+		case FOURTHQ:
+			currentGeneration[i].fitness *= normalizationFactors[3];
+			break;
+		case NOBLACKKING:
+			currentGeneration[i].fitness *= normalizationFactors[4];
+			break;
+		}
+
 		partialSum += currentGeneration[i].fitness;
 		if (randomValue <= partialSum) {
 			return currentGeneration[i];

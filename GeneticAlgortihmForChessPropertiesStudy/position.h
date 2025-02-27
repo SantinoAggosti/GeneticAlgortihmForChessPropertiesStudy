@@ -23,7 +23,7 @@ enum Species {
 
 bool generateRandomBit();
 
-#define POPULATION_SIZE 4000
+#define POPULATION_SIZE 12000
 #define PIECE_SIZE 4
 #define N1 8
 #define M1 8

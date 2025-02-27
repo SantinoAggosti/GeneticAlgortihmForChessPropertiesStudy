@@ -14,6 +14,7 @@ struct GenerationData {
 	double mean = 0.0;
 	double std_dev = 0.0;
 	int species = FIRSTQ;
+	std::vector<double> speciesDist = { 0, 0, 0, 0, 0 };
 };
 
 std::pair<GenerationData, GenerationData> operations(Position* currentGen, Position* nextGen);
