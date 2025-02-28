@@ -34,14 +34,17 @@ Mutation introduces small, random changes to maintain genetic diversity. Without
 The current algorithm, when the punishment facotr is loose enough, occasionally generates impractical outcomes, such as impossible positions or boards with a king in check. This stems from the encoding, which doesn’t inherently restrict the solution space to legal, reachable positions. One potential fix is a stricter encoding—e.g., a dual-gene system where the Position gene explicitly places pieces from the Board gene, assuming constraints like 9 queens maximize moves. However, this project avoids such assumptions to preserve flexibility and uncover unexpected insights. Undesirable positions are tolerated, as they may still contribute useful genetic sequences via crossover.
 
 ### Speciation
-Introducing speciation—grouping similar individuals into reproductive subsets—could boost performance. Preliminary tests with 750–1250 individuals showed convergence patterns similar to larger populations (e.g., 4000 individuals) over many generations. Speciation might accelerate this by fostering specialized subgroups, each optimizing distinct traits (e.g., queen placement vs. pawn structure). Further experiments are needed to quantify its impact.
+Introducing speciation—grouping similar individuals into reproductive subsets—could boost performance. The initial testing of this claim, was performed by subdividing each generation into 4 species. Each individual was assigned a species depending on the rank the black-king was placed at. The first two ranks constituted a species, the third and fourth antoher, and so on. In addition, each generation fitness was normalized so that each species constituted a ~25% of the individuals in each generation. Finally, inter-species and within-species reproduction restriction where tested. 
+Speciation results are inconclusive. There was no noticable improvement in maximum fitness, nor accelerated convergence.
+A different speciation definition might accelerate convergence by fostering specialized subgroups, each optimizing distinct traits (e.g., queen placement vs. pawn structure). 
+Further experiments are needed to quantify its impact.
 
 ### Penalty Refinement
 The empirical *Punishment Factor* remains a weak point. A systematic approach—perhaps a dynamic penalty adjusting to generation trends—could replace trial-and-error tuning, enhancing consistency and convergence speed.
 
 ## Results
 
-Using a population of 2500 and the tuned fitness function, the algorithm produces boards with over 195 legal moves for White within 500 generations. These positions feature no king in check and obey piece limits obtainable in a real game (e.g., via promotions). As a probabilistic method, performance varies: some runs dip below average, while others exceed it, with top performers reaching 205 moves.
+Using a population of 2500 and the tuned fitness function, the algorithm produces boards with over 195 legal moves for White within 500 generations. These positions feature no king in check and obey piece limits obtainable in a real game (e.g., via promotions). As a probabilistic method, performance varies: some runs dip below average, while others exceed it, with top performers reaching more than 205 moves.
 
 Interestingly, larger populations don’t always yield better results. Fitness improves with size up to 2500–3000 individuals, beyond which performance slightly declines—possibly due to diluted selection pressure. Rigorous statistical analysis is pending to confirm this trend and other observations.
 
