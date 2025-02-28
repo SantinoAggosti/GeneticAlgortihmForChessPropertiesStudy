@@ -7,20 +7,18 @@ Through the implementation of a genetic algorithm, chess properties are analyzed
 
 Each chess position is encoded into a dual-gene configuration. A "Position" gene and a "Board" gene. 
 The board gene is a 64 binary string that encodes the matrix configuration of the board itself. Each assigned bit represents wether a given chess piece exists or not in the position it encodes. 
-The Position Gene is a 4*32 binary string that encodes all possible 32 pieces in the game. Each piece is represented by a 4-binary encoding in the following way:
-
-TODO: ADD ENCODING FROM CODE
-
-The main loop of the algorithm consists in three main steps: Selection, CrossOver and Mutation.
+The Position Gene is a 4*32 binary string that encodes all possible 32 pieces in the game. Each piece, is represented through a unique 4-binary encoding. 
+The main loop of the algorithm consists in three main steps: Selection, CrossOver and Mutation. Each piece of the main loop is key to create a suitable and incresinglly evolving population.
 
 ### **SELECTION:**
 The selection procedure consists in finding the most suitable "Chess Board Organisms" to reproduce. That is, to pass on part of their genetic encoding to the next generation. A pool of _**FIT**_ individuals are selected based on their _FITNESS_- This fitness is arbitrary, but for this project, the goal is to **MAXIMIZE THE TOTAL NUMBER OF POSSIBLE MOVES WHITE CAN DO IN A NON-CHECK, POSSIBLE TO REACH IN GAME CHESS POSITION**. Therefore, the fitness function that evaluates the strength of each individual nnecesarilly needs to be directly proportional to the amount of legal moves white can do in such position. 
-For this project, a linear fitness function proved to work best: F(moves) = a*moves + b. Where "b" is a given Punishment variable used to maintain within the chess rules the number and type of pieces within the chess board. (EXPLAIN ADVANTAGES AND DISADVANTAGES OF THIS)
+For this project, a linear fitness function proved to work best: F(moves) = a*moves + b. Where "b" is a given *Punishment Factor* used to maintain within the chess rules the number and type of pieces within the chess board. The main disadvantage with this, is that the *Punishment Factor*, depends on the board being analyzed, and is empirically defined by the properties of such board. Therefore, each characteristic that is non-desirable can be punished in different manners, and in this case, where selected empirically. For example, punishing to much the addition of too many queens (9 is the maximum amount any player can have at any point in the game), can be counter-productive; The algorithm converges to a local-maxima much slower, due to the fact that the algorithm is not ggiven the possibility to in early generations, explore queens distributions that will later on be partially suitable if minimum changes are performed.
 
+A deep analysis is yet to be performed on twicking the punishment variables that constitute the *Punishment Factor*, to improve the overall algorithm avarage performance. 
 
 ### **CROSSOVER**
-CrossOver, just like in real-life reproduction, genetic information is mixed by given a crossover allele in the gene, splitting the gene in half and literally crossover each hald from one individual to the other, to produce..... FINISH
-The Genetic CrossOver Index is chosen at random. 
+CrossOver, just like in real-life reproduction, constitutes the mixing of the genetic inforormation between two given posisitons. Given a crossover allele in the gene, splitting the gene in half and literally crossover each half from one individual to the other, to produce a new individual for the next generation.
+The Genetic CrossOver Index is chosen at random.
 
 ### **MUTATION**
 Mutation, allows ffor new and key genetic information, possibly unexplored before, to populate the current population. Multiple key or strong genetic information can be lost thorugh selection and crossover, where a single bit of information is crucial for performance. Thus, mutation carries out the role of allowing the pole of living organisms to consider a larger "vector space" of genetic information.
@@ -33,8 +31,9 @@ The encoding should somehow strictlly limit the chess-board vector-space on to t
 
 Subdividing reproduction within individuals by speciation coul provide with highlly improved performance. Empirically, results obtained with 750-1250 individuals, generally converge in the same manner as populations of 4000 individuals in the long run: A .....
 
-## EMPIRIC ANALYSIS ON FITNESS FUNCTION
-The fitness function chosen was of the form: F(moves) = a*moves + b.
+# RESULTS
+
+With the empirical configuration established for the fitness function and a population size of 3500, within 500 generations the algorithm produces chess boards positions, (where no king is in check, and the number of pieces in the board is theoreticlly obtainable within a chesss game), a board with more than 195 possible movements for white. Being a probabilistic algorithm, some runs will underperform the avarage, while others can outperform it. The following is a position with 209 moves obtained by the algorithm:
 
 Where _**a**_ is an empirical constant that enhances or deplinished the overall importance given to the net number of moves in **ANY** chess position
 **_b_** is the so called _Punishment Factor_, which provides with sufficient offset to produce the desirable vector-subspace of chess-boards within all possibilities of possible and impossible chess-boards positions.
