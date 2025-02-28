@@ -38,11 +38,20 @@ Subdividing reproduction within individuals by speciation coul provide with high
 # RESULTS
 
 With the empirical configuration established for the fitness function and a population size of 2500, within 500 generations the algorithm produces chess boards positions, (where no king is in check, and the number of pieces in the board is theoreticlly obtainable within a chesss game), a board with more than 195 possible movements for white. Being a probabilistic algorithm, some runs will underperform the average, while others can outperform it. The following is a position with 205 moves obtained by the algorithm: https://i.imgur.com/Nfxf7tw.png
-![Preview](https://i.imgur.com/Nfxf7tw.png)
-
 ![Preview](https://i.imgur.com/BrnnUnQ.jpg)
 
-The following are some of my favourite chess positions reached by the algorithm. Hope you enjoy.
+The following are some of my favourite chess positions reached by the algorithm (asthetic based). Hope you enjoy.
+
+FEN: Q3Q1n1/2Q2PkP/r2Q2N1/Q5R1/5Q2/1Q5Q/4Q3/3R2K1 w - - 0 1
+![image](https://github.com/user-attachments/assets/7aca69e8-1335-4d3d-aa72-73acec7f90a7)
+
+FEN: kbR3Q1/NN1Q4/1Q6/4Q3/Q6Q/5Q2/K2Q4/2R3Q1 w - - 0 1
+![Preview](https://i.imgur.com/Nfxf7tw.png)
+
+FEN: 3Q4/7K/k1N2Q2/n1Q4B/R3Q3/1Q4QQ/3Q4/Q4R2 w - - 0 1
+![image](https://github.com/user-attachments/assets/5385824a-d1d0-43b3-a159-c711c6f0bd66)
+
+
 
 The following are the evolution curves that show the inminent growth in fitness and number of moves the population has through the run.
 
