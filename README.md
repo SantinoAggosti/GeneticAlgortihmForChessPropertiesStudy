@@ -15,7 +15,7 @@ Each chess position is represented as a dual-gene configuration: a **Board gene*
 The algorithm operates through a main loop comprising three key phases: **Selection**, **Crossover**, and **Mutation**. Together, these phases drive the evolution of a population of chess positions toward higher fitness.
 
 ### Selection
-Selection identifies the fittest “Chessboard Organisms” to pass their genetic material to the next generation. Fitness is defined arbitrarily based on the project’s goal: **maximizing the total number of legal moves White can make in a non-check, game-reachable position**. The fitness function is thus proportional to White’s legal moves. After testing various models, a linear function proved most effective:  
+Selection identifies the fittest “Chessboard Organisms” to pass their genetic material to the next generation. Fitness is defined arbitrarily based on the project’s goal: **maximizing the total number of legal moves White can make in a non-check, "game-reachable position"**. The fitness function is thus proportional to White’s legal moves. After testing various models, a linear function proved most effective:  
 
 **F(moves) = a × moves + b**  
 - *a* scales the move count.  
