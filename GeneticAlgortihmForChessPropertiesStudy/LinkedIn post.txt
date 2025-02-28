@@ -1,7 +1,0 @@
-🐴 🤔 ¿Cuál es la posición de Ajedrez con mayor cantidad de movimientos legales?  
-
-🤯 Una pregunta que en la superficie parece simple, resulta extremadamente difícil de responder, considerando las aproximadamente 10^40 posibles posiciones del tablero legales posibles. Claramente no es posible iterar por cada tablero posible. Entonces... ¿Cómo encara uno este problema?
-
-✍ 💡 Adjunto en la publicación dejo un micro-ensayo desarrollado en mi tiempo libre durante las ultimas semanas, en donde utilizo un algoritmo computacional genético para intentar resolver esta pregunta.
-
-🐙 Adicionalmente, eh subido el código desarrollado a un proyecto "Open Source" en Github para que cualquier interesado en el problema pueda aportar y mejorar los resultados obtenidos, o simplemente obtener un punto de partida para sus proyectos.
