@@ -1,3 +1,5 @@
+// Author: @santinoagosti
+
 #include "statistics.h"
 using namespace std;
 

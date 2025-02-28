@@ -1,3 +1,5 @@
+// Author: @santinoagosti
+
 #include "position.h"
 #include "operations.h"
 #include "statistics.h"
@@ -84,7 +86,7 @@ int main() {
 		graphs.maxFitnessData.push_back(fittestIndividualInGen.fitness);
 		graphs.fitMovementData.push_back(fittestIndividualInGen.numberOfMoves);
 		graphs.meanData.push_back(mean);
-		graphs.meanData.push_back(std_dev);
+		graphs.stdDevData.push_back(std_dev);
 
 		// Overall Generational Data through program run is saved
 		generationalData.push_back({ result.first });

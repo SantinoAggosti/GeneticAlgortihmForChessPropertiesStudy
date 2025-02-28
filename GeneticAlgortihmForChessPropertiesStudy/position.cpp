@@ -1,3 +1,5 @@
+// Author: @santinoagosti
+
 #include "position.h"
 #include <string>
 #include "thc.h"
@@ -79,10 +81,10 @@ void Position::setFitness() {
 	}
 
 	if (blackKingCount != 1) {
-		adders -= 50;
+		adders -= 40;
 	}
 	if (whiteKingCount != 1) {
-		adders -= 10;
+		adders -= 15;
 	}
 	if (whiteQueenCount > 9) {
 		adders -= 20;
@@ -103,11 +105,11 @@ void Position::setFitness() {
 	// Black King in Check
 	if (blackKingCount == 1) {
 		if (position.AttackedPiece(position.bking_square)) {
-			adders -= 15 + std::ceil(moveList.size()/20);
+			adders -= 23;
 		}
 	}
 
-	fitness = moveList.size() * 1.05 + adders;
+	fitness = moveList.size() * 1.08 + adders;
 	fitness < 0 ? fitness = 0 : fitness;
 	setNumberOfMoves(moveList.size());
 }

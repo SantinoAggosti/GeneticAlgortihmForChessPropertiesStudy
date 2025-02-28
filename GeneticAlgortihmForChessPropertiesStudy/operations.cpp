@@ -1,3 +1,5 @@
+// Author: @santinoagosti
+
 #include "operations.h"
 using namespace std;
 void PMX(Position& pos1, Position& pos2, int xOverIndex1, int xOverIndex2, bool isBoard, Position* nextGeneration) {

@@ -1,3 +1,5 @@
+// Author: @santinoagosti
+
 #include "plottingTools.h"
 void plotNormalCurve(double& mean, double& std_dev) {
 

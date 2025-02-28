@@ -1,3 +1,5 @@
+// Author: @santinoagosti
+
 #ifndef STATISTICS
 #define STATISTICS
 
