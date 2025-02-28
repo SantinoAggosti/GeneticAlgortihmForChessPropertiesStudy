@@ -1,61 +1,81 @@
-# CHESS PROPERTIES: Genetic Algorithm Analysis
+# Chess Properties Maximization: A Genetic Algorithm Approach
 
-The chessboard, a seemingly simple 8x8 grid, unfolds into a vast vectorial space of possible positions that defies comprehension. This immense expanse is quantified by the Shannon number, estimated at 10^120, which represents the approximate number of unique chess games that could be played—accounting for every legal sequence of moves. To put this into perspective, the number of atoms in the observable universe is estimated to be around 10^80, a figure dwarfed by the Shannon number by a factor of 10^40. This means that for every atom in the cosmos, there are billions upon billions of potential chess positions, each a distinct configuration of pieces locked in strategic interplay. This colossal scale highlights the complexity encoded within the game’s 64 squares, transforming it into a near-infinite playground of possibilities. So, amidst this staggering multitude, how can we find positions that maximize a certain property?
-Through the implementation of a genetic algorithm, chess properties are analyzed and explored, while effectively demostrating convergence towards local and pseudo global maxima in multiple maximization problems.
-For now (27/02/2024), this algorithm converges into white movement local-maxima chess positions.
-The following is a description of the internal workings of these algorithm. Taking in consideration future changes for enhanced performance through recent breakthroughs in genetic algorithms.
+The chessboard, an unassuming 8x8 grid, unfolds into a vast vector space of possible positions that defies comprehension. This immense complexity is illustrated by the number of unique legal chess positions, estimated to be around 10^44, based on recent calculations by Tromp and Österlund (2010). For context, the observable universe contains roughly 10^80 atoms—a figure that vastly exceeds the number of chess positions, yet still highlights their staggering scale. In contrast, the Shannon number, which estimates the total number of possible chess games rather than positions, is a far larger figure, approximated at 10^120. Within the 10^44 unique positions, each represents a distinct configuration of pieces locked in strategic interplay, transforming the game’s 64 squares into a near-infinite playground of possibilities. Amidst this staggering multitude, how can we pinpoint positions that maximize specific properties?
 
-The main functions and the structure of the algorithm itself was highly inspired by the book: "Genetic algorithms in search, optimization, and machine learning" by David E. Goldberg. This is considered by myself as a final project regarding the knowledge acquired through it. It is inpsiring and rewarding to use the core ideas of life and natural selection, to basiclly find a couple needles in _**10^40 universe sized haystacks**_.
+This project employs a genetic algorithm to explore and analyze chess properties, demonstrating convergence toward local and pseudo-global maxima for various maximization challenges. As of February 27, 2024, the algorithm focuses on maximizing the number of legal moves available to White in reachable, non-check positions. Below is a detailed breakdown of the algorithm’s mechanics, inspired by recent advancements in genetic algorithms and poised for future enhancements.
 
-## Algorithm Functionallity
+The algorithm’s structure draws heavily from Genetic Algorithms in Search, Optimization, and Machine Learning by David E. Goldberg. This project serves as my final application of the knowledge gained from that book. It’s both inspiring and rewarding to harness the principles of life and natural selection to tackle the immense complexity of chess positions. The search space, estimated at 10^44 possible configurations, is akin to finding a needle in a haystack as vast as the universe itself. Overcoming this challenge required innovative encoding strategies and careful tuning of the algorithm’s parameters.
 
-Each chess position is encoded into a dual-gene configuration. A "Position" gene and a "Board" gene. 
-The board gene is a 64 binary string that encodes the matrix configuration of the board itself. Each assigned bit represents wether a given chess piece exists or not in the position it encodes. 
-The Position Gene is a 4*32 binary string that encodes all possible 32 pieces in the game. Each piece, is represented through a unique 4-binary encoding. 
-The main loop of the algorithm consists in three main steps: Selection, CrossOver and Mutation. Each piece of the main loop is key to create a suitable and incresinglly evolving population.
+## Algorithm Functionality
 
-### **SELECTION:**
-The selection procedure consists in finding the most suitable "Chess Board Organisms" to reproduce. That is, to pass on part of their genetic encoding to the next generation. A pool of _**FIT**_ individuals are selected based on their _FITNESS_- This fitness is arbitrary, but for this project, the goal is to **MAXIMIZE THE TOTAL NUMBER OF POSSIBLE MOVES WHITE CAN DO IN A NON-CHECK, POSSIBLE TO REACH IN GAME CHESS POSITION**. Therefore, the fitness function that evaluates the strength of each individual nnecesarilly needs to be directly proportional to the amount of legal moves white can do in such position. 
-For this project, a linear fitness function proved to work best: F(moves) = a*moves + b. Where "b" is a given *Punishment Factor* used to maintain within the chess rules the number and type of pieces within the chess board. The main disadvantage with this, is that the *Punishment Factor*, depends on the board being analyzed, and is empirically defined by the properties of such board. Therefore, each characteristic that is non-desirable can be punished in different manners, and in this case, where selected empirically. For example, punishing to much the addition of too many queens (9 is the maximum amount any player can have at any point in the game), can be counter-productive; The algorithm converges to a local-maxima much slower, due to the fact that the algorithm is not ggiven the possibility to in early generations, explore queens distributions that will later on be partially suitable if minimum changes are performed.
+Each chess position is represented as a dual-gene configuration: a **Board gene** and a **Position gene**.  
+- The **Board gene** is a 64-bit binary string encoding the chessboard’s layout. Each bit indicates whether a piece occupies a specific square (1 for occupied, 0 for empty).  
+- The **Position gene** is a 128-bit string (4 bits × 32 pieces) encoding the identity of up to 32 pieces (e.g., king, queen, pawn) using a unique 4-bit identifier per piece.  
 
-A deep analysis is yet to be performed on twicking the punishment variables that constitute the *Punishment Factor*, to improve the overall algorithm avarage performance. 
+The algorithm operates through a main loop comprising three key phases: **Selection**, **Crossover**, and **Mutation**. Together, these phases drive the evolution of a population of chess positions toward higher fitness.
 
-### **CROSSOVER**
-CrossOver, just like in real-life reproduction, constitutes the mixing of the genetic inforormation between two given posisitons. Given a crossover allele in the gene, splitting the gene in half and literally crossover each half from one individual to the other, to produce a new individual for the next generation.
-The Genetic CrossOver Index is chosen at random.
+### Selection
+Selection identifies the fittest “Chessboard Organisms” to pass their genetic material to the next generation. Fitness is defined arbitrarily based on the project’s goal: **maximizing the total number of legal moves White can make in a non-check, "game-reachable position"**. The fitness function is thus proportional to White’s legal moves. After testing various models, a linear function proved most effective:  
 
-### **MUTATION**
-Mutation, allows ffor new and key genetic information, possibly unexplored before, to populate the current population. Multiple key or strong genetic information can be lost thorugh selection and crossover, where a single bit of information is crucial for performance. Thus, mutation carries out the role of allowing the pole of living organisms to consider a larger "vector space" of genetic information.
+**F(moves) = a × moves + b**  
+- *a* scales the move count.  
+- *b* is a *Punishment Factor* that penalizes boards violating chess rules (e.g., too many pieces).  
 
-## **FUTURE IMPROVEMENTS**
-The algorithm still produces overall best-fit impossible and king-in-check positions which in this case are undisirable. The problem is centralize on the encoding chosen. 
-The encoding should somehow strictlly limit the chess-board vector-space on to the ones that are possible. If it is assumed that the global maxima of legal moves by white, wuth no king in check, is maximized if and only if 9 white queens are used, the genetic encoding of the chess-board encoding could be simplified into a dual-gene encoding, maintaining the "Board" gene, and a "Position" gene, which implicitlly encodes in which position each piece should be placed when reading the board gene in order for example. However, through the implementation of this project, no assumptions where made about the main characteristics a sub-optimal or global maxima in legal moves chess-board should have; Therefore the presence of undisirable positions was allowed, given that additionally, this could provide insightful and totally usuful genetic allele sequences for fitness improvement through crossover, that could otherwise be ignored with a piece-strict encoding like mentioned before.
+The *Punishment Factor* varies by board and is set empirically. For instance, exceeding the maximum of 9 queens per side (achievable via pawn promotion) incurs a penalty. However, over-penalizing queens can slow convergence by limiting early exploration of queen-heavy configurations, which might later yield high-move positions with slight adjustments. A deeper study of penalty tuning is planned to optimize average performance.
 
-### SPECIATION
+### Crossover
+Crossover mimics biological reproduction by blending genetic material from two parent positions. A random crossover point splits each gene (Board and Position) in half, swapping segments between parents to create two offspring for the next generation. This random index ensures diverse recombination while preserving meaningful genetic patterns.
 
-Subdividing reproduction within individuals by speciation coul provide with highlly improved performance. Empirically, results obtained with 750-1250 individuals, generally converge in the same manner as populations of 4000 individuals in the long run: A .....
+### Mutation
+Mutation introduces small, random changes to maintain genetic diversity. Without it, valuable traits might be lost through selection and crossover—especially when a single bit drastically affects fitness. By flipping bits at a low probability, mutation expands the population’s exploration of the chess position vector space, potentially unlocking previously unseen high-fitness configurations.
 
-# RESULTS
+## Future Improvements
 
-With the empirical configuration established for the fitness function and a population size of 2500, within 500 generations the algorithm produces chess boards positions, (where no king is in check, and the number of pieces in the board is theoreticlly obtainable within a chesss game), a board with more than 195 possible movements for white. Being a probabilistic algorithm, some runs will underperform the average, while others can outperform it. The following is a position with 205 moves obtained by the algorithm: https://i.imgur.com/Nfxf7tw.png
+The current algorithm, when the punishment facotr is loose enough, occasionally generates impractical outcomes, such as impossible positions or boards with a king in check. This stems from the encoding, which doesn’t inherently restrict the solution space to legal, reachable positions. One potential fix is a stricter encoding—e.g., a dual-gene system where the Position gene explicitly places pieces from the Board gene, assuming constraints like 9 queens maximize moves. However, this project avoids such assumptions to preserve flexibility and uncover unexpected insights. Undesirable positions are tolerated, as they may still contribute useful genetic sequences via crossover.
+
+### Speciation
+Introducing speciation—grouping similar individuals into reproductive subsets—could boost performance. The initial testing of this claim, was performed by subdividing each generation into 4 species. Each individual was assigned a species depending on the rank the black-king was placed at. The first two ranks constituted a species, the third and fourth antoher, and so on. In addition, each generation fitness was normalized so that each species constituted a ~25% of the individuals in each generation. Finally, inter-species and within-species reproduction restriction where tested. 
+Speciation results are inconclusive. There was no noticable improvement in maximum fitness, nor accelerated convergence.
+A different speciation definition might accelerate convergence by fostering specialized subgroups, each optimizing distinct traits (e.g., queen placement vs. pawn structure). 
+Further experiments are needed to quantify its impact.
+
+### Penalty Refinement
+The empirical *Punishment Factor* remains a weak point. A systematic approach—perhaps a dynamic penalty adjusting to generation trends—could replace trial-and-error tuning, enhancing consistency and convergence speed.
+
+## Results
+
+Using a population of 2500 and the tuned fitness function, the algorithm produces boards with over 195 legal moves for White within 500 generations. These positions feature no king in check and obey piece limits obtainable in a real game (e.g., via promotions). As a probabilistic method, performance varies: some runs dip below average, while others exceed it, with top performers reaching more than 205 moves.
+
+Interestingly, larger populations don’t always yield better results. Fitness improves with size up to 2500–3000 individuals, beyond which performance slightly declines—possibly due to diluted selection pressure. Rigorous statistical analysis is pending to confirm this trend and other observations.
+
+Here’s a standout position with 205 moves:  
+[Link: https://i.imgur.com/Nfxf7tw.png](https://i.imgur.com/Nfxf7tw.png)  
 ![Preview](https://i.imgur.com/BrnnUnQ.jpg)
 
-The following are some of my favourite chess positions reached by the algorithm (asthetic based). Hope you enjoy.
+Evolution curves illustrate the population’s fitness growth:  
+![Curve 1](https://github.com/user-attachments/assets/be07cd65-5b0c-4955-b824-203e5b15101f)  
+![Curve 2](https://github.com/user-attachments/assets/d8390da8-aec9-49e0-a70f-1bcf82890f77)
 
-The following are the evolution curves that show the inminent growth in fitness and number of moves the population has through the run.
+// Statistical analysis where performed through the use of hypothesis tests:
 
-![Imagen de WhatsApp 2025-02-27 a las 23 32 46_7108882e](https://github.com/user-attachments/assets/be07cd65-5b0c-4955-b824-203e5b15101f)
-![Imagen de WhatsApp 2025-02-27 a las 23 32 46_1acbe70d](https://github.com/user-attachments/assets/d8390da8-aec9-49e0-a70f-1bcf82890f77)
+![image](https://github.com/user-attachments/assets/2211605f-1656-43eb-9a50-74bee9235e45)
+![image](https://github.com/user-attachments/assets/1cb3f8fd-342c-482a-ae2a-c5d915f2b6cf)
 
-Finally, the following are some of my favourite chess positions fully generated by my algorithm. Hope you enjoy. <3
 
-FEN: Q3Q1n1/2Q2PkP/r2Q2N1/Q5R1/5Q2/1Q5Q/4Q3/3R2K1 w - - 0 1
-![image](https://github.com/user-attachments/assets/7aca69e8-1335-4d3d-aa72-73acec7f90a7)
+## Favorite Positions
 
-FEN: kbR3Q1/NN1Q4/1Q6/4Q3/Q6Q/5Q2/K2Q4/2R3Q1 w - - 0 1
-![Preview](https://i.imgur.com/Nfxf7tw.png)
+Below are my favourite aesthetically pleasing positions generated by the algorithm. Enjoy! <3
 
-FEN: 3Q4/7K/k1N2Q2/n1Q4B/R3Q3/1Q4QQ/3Q4/Q4R2 w - - 0 1
-![image](https://github.com/user-attachments/assets/5385824a-d1d0-43b3-a159-c711c6f0bd66)
+1. **FEN**: `Q3Q1n1/2Q2PkP/r2Q2N1/Q5R1/5Q2/1Q5Q/4Q3/3R2K1 w - - 0 1`  
+   ![Image](https://github.com/user-attachments/assets/7aca69e8-1335-4d3d-aa72-73acec7f90a7)
 
-Counter intuetivelly, the larger the population doesn´t correlate necesarilly to a higher maximum fitness obtained. There is indeed a correlation initially. But after around 2500-3000 individuals, performance begins to slowly deteriorate as the number of individuals per generation increases. Further data collection and analysis are required to demonstrate this thorugh a rigorous mathematical approach, along with other several statements made through this file.
+2. **FEN**: `kbR3Q1/NN1Q4/1Q6/4Q3/Q6Q/5Q2/K2Q4/2R3Q1 w - - 0 1`  
+   ![Preview](https://i.imgur.com/Nfxf7tw.png)
+
+3. **FEN**: `3Q4/7K/k1N2Q2/n1Q4B/R3Q3/1Q4QQ/3Q4/Q4R2 w - - 0 1`  
+   ![Image](https://github.com/user-attachments/assets/5385824a-d1d0-43b3-a159-c711c6f0bd66)
+
+3. **FEN**: `Q2R2nk/2Q3RB/5Q2/1Q5Q/8/4Q3/Q5Q1/3QB1K1 w - - 0 1`  
+   ![Image](https://github.com/user-attachments/assets/50fa2716-e613-4c18-9013-c658590ba75e)
+
+Thanks to Bill Forster for publishing it's thc repository (https://github.com/billforsternz/thc-chess-library) used to calculate the number of moves from each position.
