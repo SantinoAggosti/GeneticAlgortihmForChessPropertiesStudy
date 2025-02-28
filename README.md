@@ -38,7 +38,7 @@ Subdividing reproduction within individuals by speciation coul provide with high
 # RESULTS
 
 With the empirical configuration established for the fitness function and a population size of 2500, within 500 generations the algorithm produces chess boards positions, (where no king is in check, and the number of pieces in the board is theoreticlly obtainable within a chesss game), a board with more than 195 possible movements for white. Being a probabilistic algorithm, some runs will underperform the average, while others can outperform it. The following is a position with 205 moves obtained by the algorithm:
-![alt text]([https://github.com/SantinoAggosti/GeneticAlgortihmForChessPropertiesStudy/blob/master/images/206%20-%202Q4B-5Q2-3Q4-Q5Q1-4Q3-1R5Q-1BR1Q3-1kn1K1Q1%20b%20-%20-%200%201.jpg?raw=true])
+![Preview]([https://github.com/SantinoAggosti/GeneticAlgortihmForChessPropertiesStudy/blob/master/images/206%20-%202Q4B-5Q2-3Q4-Q5Q1-4Q3-1R5Q-1BR1Q3-1kn1K1Q1%20b%20-%20-%200%201.jpg?raw=true])
 
 
 
