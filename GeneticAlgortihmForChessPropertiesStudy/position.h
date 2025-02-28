@@ -67,7 +67,7 @@ public:
 	};
 	float fitness;
 	int species;
-	size_t numberOfMoves;
+	int numberOfMoves;
 	std::string FEDstringCode;
 	std::array<bool, BOARD_STRING_SIZE> boardGene;
 	std::array<bool, PIECE_STRING_SIZE> piecesGene;
@@ -78,7 +78,7 @@ public:
 	void setFED();
 	void setSpecies(int& rank);
 	void setSpecies();
-	void setNumberOfMoves(size_t size);
+	void setNumberOfMoves(int size);
 private:
 	void setBoard();
 	void setPieces();

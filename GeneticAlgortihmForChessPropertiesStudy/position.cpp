@@ -41,7 +41,7 @@ void Position::setFitness() {
 	vector<thc::Move> checks;
 	position.GenLegalMoveList(moveList);
 
-	float adders = 0;
+	int adders = 0;
 	char whiteKnightCount = 0;
 	char whitePawnCount = 0;
 	char whiteBishopCount = 0;
@@ -85,34 +85,34 @@ void Position::setFitness() {
 		adders -= 10;
 	}
 	if (whiteQueenCount > 9) {
-		adders -= 13;
+		adders -= 20;
 	}
 	if (whiteRookCount > 10) {
-		adders -= 10;
+		adders -= 15;
 	}
 	if (whiteBishopCount + whiteQueenCount + whitePawnCount + whiteRookCount + whiteKingCount > 15) {
-		adders -= 10;
+		adders -= 15;
 	}
 	if (whiteQueenCount + whiteRookCount > 11) {
-		adders -= 10;
+		adders -= 15;
 	}
 	if (whiteQueenCount + whiteBishopCount > 11) {
-		adders -= 10;
+		adders -= 15;
 	}
 
 	// Black King in Check
 	if (blackKingCount == 1) {
 		if (position.AttackedPiece(position.bking_square)) {
-			adders -= (15 + moveList.size()/20);
+			adders -= 15 + std::ceil(moveList.size()/20);
 		}
 	}
 
-	fitness = float(moveList.size())*1.06 + adders;
+	fitness = moveList.size() * 1.05 + adders;
 	fitness < 0 ? fitness = 0 : fitness;
 	setNumberOfMoves(moveList.size());
 }
 
-void Position::setNumberOfMoves(size_t size) {
+void Position::setNumberOfMoves(int size) {
 	numberOfMoves = size;
 }
 
@@ -169,9 +169,9 @@ void Position::setFED() {
 			for (int j = 0; j < PIECE_SIZE; j++) {
 				piece.append(to_string(piecesGene[numberOfPieces * 4 + j]));
 			}
-			//if (piece == "0110") {
-			//	setSpecies(rank);
-			//}
+			if (piece == "0110") {
+				setSpecies(rank);
+			}
 
 			// If the coding does exist
 			if (FEDstrings.find(piece) != FEDstrings.end()) {
