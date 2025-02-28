@@ -69,45 +69,42 @@ bool biasedCoin(float p) {
 	}
 }
 
-// Information holder for fittest individual overall.
-GenerationData fittestOverall = { "", 0, 0 };
-
 // Information holder for fittest individual within a genertion
-GenerationData generationFittest = { "", 0, 0 };
+Position generationFittest = Position();
 
 //TODO: Speciation requires strict distinction between individuals. Even considering their overall net fitness.
 // The weighted rullete selection should be strictlly performed by normalizing each fitness with their respective Species population.
 
 // Operations: The whole set of operations is executed in the correct order through the overall population.
-std::pair<GenerationData, GenerationData> operations(Position* currentGeneration, Position* nextGeneration) {
+std::pair<Position, Position> operations(Position* currentGeneration, Position* nextGeneration, Position& fittestOverall) {
 	int xOverBoard1, xOverBoard2, xOverPieces1, xOverPieces2;
-	generationFittest = { "", 0, 0, FIRSTQ };
 	vector<double> speciesDistribution = { 0, 0, 0, 0, 0 };
 	for (int i = 0; i < POPULATION_SIZE; i++) {
 
-		switch (currentGeneration[i].species) {
-		case FIRSTQ:
-			speciesDistribution[0] += 1;
+		//switch (currentGeneration[i].species) {
+		//case FIRSTQ:
+		//	speciesDistribution[0] += 1;
 
-			break;
-		case SECONDQ:
-			speciesDistribution[1] += 1;
+		//	break;
+		//case SECONDQ:
+		//	speciesDistribution[1] += 1;
 
-			break;
-		case THIRDQ:
-			speciesDistribution[2] += 1;
+		//	break;
+		//case THIRDQ:
+		//	speciesDistribution[2] += 1;
 
-			break;
-		case FOURTHQ:
-			speciesDistribution[3] += 1;
+		//	break;
+		//case FOURTHQ:
+		//	speciesDistribution[3] += 1;
 
-			break;
-		case NOBLACKKING:
-			speciesDistribution[4] += 1;
+		//	break;
+		//case NOBLACKKING:
+		//	speciesDistribution[4] += 1;
 
-			break;
-		}
-		generationFittest.speciesDist = speciesDistribution;
+		//	break;
+		//}
+		//generationFittest.speciesDist = speciesDistribution;
+
 		xOverBoard1 = xOverIndex(BOARD_STRING_SIZE);
 		xOverBoard2 = xOverIndex(BOARD_STRING_SIZE);
 
@@ -147,13 +144,6 @@ std::pair<GenerationData, GenerationData> operations(Position* currentGeneration
 
 	}
 
-	// The pointer initially being used to allocate the current generation now points
-	// To the now updated next generation.
-	//
-	// The pointer that previouslly pointed to the to-fullfill generation now points to the previous population.
-	// This dynamic memory that allocated the previous population, will now be edited through the OPERATIONS function.
-
-	// This saves the iteration through the entire Population to individually assign one generation to the other.
 	//std::swap(currentGeneration, nextGeneration);
 
 	for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -204,24 +194,24 @@ Position weightedRouletteWheelSelection(Position* currentGeneration) {
 	double partialSum = 0.0;
 	for (int i = 0; i < POPULATION_SIZE; i++) {
 
-		// Fitness normalization: Each species now has 25% chance of being choseen for reproduction.
-		switch (currentGeneration[i].species) {
-		case FIRSTQ:
-			currentGeneration[i].fitness *= normalizationFactors[0];
-			break;
-		case SECONDQ:
-			currentGeneration[i].fitness *= normalizationFactors[1];
-			break;
-		case THIRDQ:
-			currentGeneration[i].fitness *= normalizationFactors[2];
-			break;
-		case FOURTHQ:
-			currentGeneration[i].fitness *= normalizationFactors[3];
-			break;
-		case NOBLACKKING:
-			currentGeneration[i].fitness *= normalizationFactors[4];
-			break;
-		}
+		//// Fitness normalization: Each species now has 25% chance of being choseen for reproduction.
+		//switch (currentGeneration[i].species) {
+		//case FIRSTQ:
+		//	currentGeneration[i].fitness *= normalizationFactors[0];
+		//	break;
+		//case SECONDQ:
+		//	currentGeneration[i].fitness *= normalizationFactors[1];
+		//	break;
+		//case THIRDQ:
+		//	currentGeneration[i].fitness *= normalizationFactors[2];
+		//	break;
+		//case FOURTHQ:
+		//	currentGeneration[i].fitness *= normalizationFactors[3];
+		//	break;
+		//case NOBLACKKING:
+		//	currentGeneration[i].fitness *= normalizationFactors[4];
+		//	break;
+		//}
 
 		partialSum += currentGeneration[i].fitness;
 		if (randomValue <= partialSum) {
@@ -243,10 +233,10 @@ int xOverIndex(int type) {
 	double randomValuePiece = distrib(gen);
 	int xOverIndex;
 	if (type == BOARD_STRING_SIZE) {
-		xOverIndex = randomValueBoard * BOARD_STRING_SIZE;
+		xOverIndex = int(std::ceil(randomValueBoard * BOARD_STRING_SIZE));
 	}
 	else {
-		xOverIndex = randomValueBoard * PIECE_STRING_SIZE;
+		xOverIndex = int(std::ceil(randomValueBoard * PIECE_STRING_SIZE));
 	}
 	return xOverIndex;
 }
@@ -278,23 +268,13 @@ void mutation(Position& pos, double pBoard, double pPiece) {
 }
 
 // Optimization is still required.
-void generationAndOverallFittest(GenerationData& generationFittest, GenerationData& fittestOverall, Position& individual2Analyze) {
-	if (individual2Analyze.fitness > fittestOverall.maximumFitness) {
-		fittestOverall.maximumFitness = individual2Analyze.fitness;
-		fittestOverall.code = individual2Analyze.FEDstringCode;
-		fittestOverall.maxNumberMoves = individual2Analyze.numberOfMoves;
-		fittestOverall.species = individual2Analyze.species;
-
-		generationFittest.maximumFitness = individual2Analyze.fitness;
-		generationFittest.code = individual2Analyze.FEDstringCode;
-		generationFittest.maxNumberMoves = individual2Analyze.numberOfMoves;
-		generationFittest.species = individual2Analyze.species;
+void generationAndOverallFittest(Position& generationFittest, Position& fittestOverall, Position& individual2Analyze) {
+	if (individual2Analyze.fitness > fittestOverall.fitness) {
+		fittestOverall = individual2Analyze;
+		generationFittest = individual2Analyze;
 	}
 
-	else if (individual2Analyze.fitness > generationFittest.maximumFitness) {
-		generationFittest.maximumFitness = individual2Analyze.fitness;
-		generationFittest.code = individual2Analyze.FEDstringCode;
-		generationFittest.maxNumberMoves = individual2Analyze.numberOfMoves;
-		generationFittest.species = individual2Analyze.species;
+	else if (individual2Analyze.fitness > generationFittest.fitness) {
+		generationFittest = individual2Analyze;
 	}
 }

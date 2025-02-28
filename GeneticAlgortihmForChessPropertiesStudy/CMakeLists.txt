@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_executable (GeneticAlgortihmForChessPropertiesStudy   "main.cpp" "position.cpp" "position.h" "operations.cpp" "operations.h" "thc.cpp" "statistics.h" "statistics.cpp")
+add_executable (GeneticAlgortihmForChessPropertiesStudy   "main.cpp" "position.cpp" "position.h" "operations.cpp" "operations.h" "thc.cpp" "statistics.h" "statistics.cpp" "plottingTools.cpp" "plottingTools.h")
 add_subdirectory(matplotplusplus)
 target_link_libraries(GeneticAlgortihmForChessPropertiesStudy PUBLIC matplot)
 

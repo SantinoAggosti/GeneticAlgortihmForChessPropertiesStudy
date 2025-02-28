@@ -10,7 +10,6 @@
 
 double calculateMean(Position* currentGeneration, int n);
 double calculateStdDev(Position* currentGeneration, int n, double mean);
-double calculateMedian(Position* currentGeneration, int n);
 std::vector<double> analyzeGeneration(Position* currentGeneration, int N, double epsilon, double z);
 
 #endif 

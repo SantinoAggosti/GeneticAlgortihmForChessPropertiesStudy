@@ -26,19 +26,6 @@ double calculateStdDev(Position* currentGeneration, int n, double mean) {
     return sqrt(sumSquaredDiff / (n - 1)); // Sample standard deviation
 }
 
-//// Function to calculate median of a vector slice (requires copying to sort)
-//double calculateMedian(Position* currentGeneration, size_t n) {
-//    if (n == 0 || n > POPULATION_SIZE) throw invalid_argument("Invalid sample size");
-//    vector<double> slice(&currentGeneration, &currentGeneration + n*sizeof(Position));
-//    sort(slice.begin(), slice.end());
-//    if (n % 2 == 0) {
-//        return (slice[n / 2 - 1] + slice[n / 2]) / 2.0;
-//    }
-//    else {
-//        return slice[n / 2];
-//    }
-//}
-
 // Function to calculate required sample size and statistics
 vector<double> analyzeGeneration(Position* currentGeneration, int N, double epsilon, double z) {
     // Step 1: Calculate initial mean and std dev from full population to estimate CV
@@ -52,14 +39,13 @@ vector<double> analyzeGeneration(Position* currentGeneration, int N, double epsi
     //cout << "Initial sample size (n0): " << n0 << "\n";
 
     // Step 3: Apply finite population correction
+    // n: Adjusted sample size
     double n = n0 / (1.0 + (n0 - 1.0) / N);
     int sampleSize = static_cast<int>(ceil(n));
     if (sampleSize > POPULATION_SIZE) {
         sampleSize = POPULATION_SIZE; // Cap at population size
         cout << "Warning: Required sample size exceeds population; using full population\n";
     }
-    //cout << "Adjusted sample size (n): " << sampleSize << "\n";
-
     // Step 4: Calculate statistics using first n individuals
     double mean = calculateMean(currentGeneration, sampleSize);
     double stdDev = calculateStdDev(currentGeneration, sampleSize, mean);

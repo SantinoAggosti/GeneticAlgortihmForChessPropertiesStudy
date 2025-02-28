@@ -7,23 +7,13 @@
 #include <random>
 #include <unordered_map>
 
-enum Species {
-	FIRSTQ,
-	SECONDQ,
-	THIRDQ,
-	FOURTHQ,
-	NOBLACKKING
-};
-// Usage: Colors myColor = RED;
 
 // Positions: Binary Coded organisms consisting of a gene to represent the pieces and positioning of such pieces.
 // Each piece is encoded through 4 digits, as shown in FEDstrings. With a max quantity of pieces (32), the total encodign pieces length is 128 chars.
 // The position is encoded through a binary matrix in string form (100101110....) of 64 characters, representing the allowed positioning of the pieces.
 // Population Size indicated the amount of "Positions" organisms in the population at any given time.
 
-bool generateRandomBit();
-
-#define POPULATION_SIZE 12000
+#define POPULATION_SIZE 2750
 #define PIECE_SIZE 4
 #define N1 8
 #define M1 8
@@ -31,13 +21,23 @@ bool generateRandomBit();
 #define MAX_PIECES 32
 #define PIECE_STRING_SIZE MAX_PIECES*PIECE_SIZE
 
+bool generateRandomBit();
+
+enum Species {
+	FIRSTQ,
+	SECONDQ,
+	THIRDQ,
+	FOURTHQ,
+	NOBLACKKING
+};
+
 class Position {
 public:
 	//Initial Random Constructor
 	Position() {
 		setBoard();
 		setPieces();
-		setSpecies();
+		//setSpecies();
 		setFED();
 		setFitness();
 	}
@@ -45,7 +45,7 @@ public:
 	Position(std::array<bool, BOARD_STRING_SIZE> boardGene, std::array<bool, PIECE_STRING_SIZE> pieceGene) {
 		setBoard(boardGene);
 		setPieces(pieceGene);
-		setSpecies();
+		//setSpecies();
 		setFitness();
 		setFED();
 
@@ -67,7 +67,7 @@ public:
 	};
 	float fitness;
 	int species;
-	int numberOfMoves;
+	size_t numberOfMoves;
 	std::string FEDstringCode;
 	std::array<bool, BOARD_STRING_SIZE> boardGene;
 	std::array<bool, PIECE_STRING_SIZE> piecesGene;
@@ -78,7 +78,7 @@ public:
 	void setFED();
 	void setSpecies(int& rank);
 	void setSpecies();
-	void setNumberOfMoves(int size);
+	void setNumberOfMoves(size_t size);
 private:
 	void setBoard();
 	void setPieces();
